@@ -10,7 +10,7 @@ Cards::Cards(){
         //Recorremos todos los valores
         for(int j=0; j < 13; ++j){
             //J+1 porque el enum comienza en 1
-            Card c = {static_cast<Suit>(i), static_cast<Figure>(j+1)};
+            Card c = {static_cast<Suit>(i), static_cast<Value>(j+1)};
             Deck.push_back(c);
         }
     }
@@ -39,21 +39,21 @@ std::string Cards::PrintSuit(Suit s){
     return "";
 }
 
-std::string Cards::PrintFig(Figure f){
+std::string Cards::PrintFig(Value f){
     switch(f){
-        case Figure::Ace: return "Ace"; break;
-        case Figure::Two: return "Two"; break;
-        case Figure::Three: return "Three"; break;
-        case Figure::Four: return "Four"; break;
-        case Figure::Five: return "Five"; break;
-        case Figure::Six: return "Six"; break;
-        case Figure::Seven: return "Seven"; break;
-        case Figure::Eight: return "Eight"; break;
-        case Figure::Nine: return "Nine"; break;
-        case Figure::Ten: return "Ten"; break;
-        case Figure::Jack : return "Jack"; break;
-        case Figure::Queen: return "Queen"; break;
-        case Figure::King: return "King"; break;
+        case Value::Ace: return "Ace"; break;
+        case Value::Two: return "Two"; break;
+        case Value::Three: return "Three"; break;
+        case Value::Four: return "Four"; break;
+        case Value::Five: return "Five"; break;
+        case Value::Six: return "Six"; break;
+        case Value::Seven: return "Seven"; break;
+        case Value::Eight: return "Eight"; break;
+        case Value::Nine: return "Nine"; break;
+        case Value::Ten: return "Ten"; break;
+        case Value::Jack : return "Jack"; break;
+        case Value::Queen: return "Queen"; break;
+        case Value::King: return "King"; break;
     }
     return "";
 }

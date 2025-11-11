@@ -9,7 +9,8 @@ class Cards {
             Hearts,
             Spades //Picas
         };
-        enum class Figure{
+
+        enum class Value{
             Ace = 1, //11 or 1
             Two, 
             Three,
@@ -26,14 +27,14 @@ class Cards {
         };
         struct Card{
             Suit suit;
-            Figure fig;
+            Value fig;
         };
         Cards();
         void shuffleCards();
         void showCards() const;
         Card giveCard();
         static std::string PrintSuit(Suit s);
-        static std::string PrintFig(Figure f);
+        static std::string PrintFig(Value f);
         std::vector<Card> Deck;
     private:
         static const int kCardsPerDeck = 52; 
