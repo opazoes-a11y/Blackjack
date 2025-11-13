@@ -1,4 +1,4 @@
-#include "dealer.h"
+#include "jaco_table.h"
 
 class Game {
     public:

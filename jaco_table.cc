@@ -5,7 +5,6 @@
 */
 
 #include "jaco_table.h"
-#include "jaco_player.h"
 #include "dealer.h"
 
 // Class Cards for common deck from which players and dealer draw cards

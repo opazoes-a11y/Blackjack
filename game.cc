@@ -5,8 +5,6 @@
 //Game constructor
 Game::Game() : deck_(), player_(), dealer_(), round_over(false) {}
 
-
-
 void Game::Start(){
     round_over = false;
     //init var

@@ -1,6 +1,6 @@
-#include "player.h"
+#include "jaco_player.h"
 
-class Dealer : public Player {
+class Dealer : public Jaco_player {
     public:
         Dealer();
         int money;
