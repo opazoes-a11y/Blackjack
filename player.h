@@ -1,4 +1,4 @@
-#include "cards.h"
+#include "jaco_table.h"
 
 class Player{
     public:

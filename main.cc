@@ -1,3 +1,4 @@
+#include "jaco_table.h"
 #include "game.h"
 #include <iostream>
 #include <string>

@@ -1,4 +1,4 @@
-#include "player.h"
+#include "jaco_table.h"
 #include <iostream>
 
 int Player::HandScore() const{
