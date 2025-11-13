@@ -1,5 +1,8 @@
 #include "dealer.h"
+#include "itable.h"
 #include <iostream>
+
+Dealer::Dealer() : money(ITable::kCroupierStartMoney) {}
 
 void Dealer::showCard() const{
     const auto& c = Hand.front();
