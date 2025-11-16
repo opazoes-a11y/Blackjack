@@ -64,5 +64,5 @@ class Jaco_player : public IPlayer {
          */
         virtual bool DecideUseSafe(const ITable& table, int player_index) override;
 
-        virtual ~Jaco_player() = default;
+        ~Jaco_player() = default;
 };

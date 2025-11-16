@@ -121,6 +121,8 @@ public:
      */
     int DealerStop() const override{ return kDealerStop; }
 
+    ~jaco_rules() = default;
+
 private:
     /**
      * @brief Stores the active game mode selected by the user.
