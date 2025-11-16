@@ -1,5 +1,4 @@
 #include "itable.h"
-#include "jaco_player.h"
 #include "dealer.h"
 #include <vector>
 #include <string>

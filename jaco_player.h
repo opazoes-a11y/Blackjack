@@ -1,4 +1,4 @@
-#include "iplayer.h"
+#include "Interface/iplayer.h"
 #include "jaco_table.h"
 
 class Jaco_player : public IPlayer {
