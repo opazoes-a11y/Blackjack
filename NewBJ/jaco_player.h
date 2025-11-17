@@ -1,179 +1,212 @@
+#pragma once
+#ifndef JACO_PLAYER_H
+#define JACO_PLAYER_H
 #include "Interface/iplayer.h"
 #include "NewBJ/jaco_rules.h"
 #include "NewBJ/cards.h"
-
 /**
  * @class Jaco_player
  * @brief Represents a Blackjack player with hand management and betting logic.
  *
- * This class implements the IPlayer interface, storing player state such as
- * money, current bet, and card hands. It also provides helper methods for
- * scoring, checking Blackjack conditions, and interacting with the game table.
+ * This class implements the IPlayer interface and stores all the state
+ * associated with a single player: money, current bet, and their hands.
+ * It also provides helper methods for hand scoring and basic Blackjack
+ * conditions such as bust and Blackjack detection.
  */
 class Jaco_player : public IPlayer {
     public:
-
         /**
-         * @brief Constructs a player with an index and initial money.
+         * @brief Constructs a player with a given index and initial money.
          *
          * Initializes the player identifier, starting money using
-         * jaco_rules::kPlayerStartMoney, and sets the current bet to zero.
+         * @param jaco_rules::kPlayerStartMoney, and sets the current bet to zero.
+         * Uses @param next_player_index as static int to increment value
+         * when a player is created.
          *
-         * @param player_index Unique identifier for this player at the table.
+         * @param player_index Index of the player at the table.
          */
-        Jaco_player(int player_index) : player_index(player_index), player_money(jaco_rules::kPlayerStartMoney), current_bet(0) {}
+        Jaco_player(int player_index, const jaco_rules& rules) 
+            : player_index(next_player_index++), 
+            player_money(jaco_rules::kPlayerStartMoney), 
+            current_bet(0),
+            rules_(rules) {}
+        
+        /**
+         * @brief Shared player index (used as an identifier counter).
+         *
+         * This static member can be used to generate or track the current
+         * player index across multiple instances.
+         */
+        static int next_player_index;
 
         /**
-         * @brief Player identifier at the table.
+         * @brief Unique identifier for the player at the table.
          *
-         * This index is used to reference the player in the ITable interface.
+         * Assigned automatically using @ref next_player_index during construction.
          */
         int player_index;
 
         /**
-         * @brief Current amount of money owned by the player.
+         * @brief Current amount of money the player owns.
          */
         int player_money;
 
         /**
-         * @brief Current bet placed by the player in the ongoing round.
+         * @brief Amount of money the player has currently bet in the active round.
          */
         int current_bet;
 
         /**
-         * @brief Checks if the player still has money.
-         * @return true if the player has more than 0 money, false otherwise.
+         * @brief Checks if the player still has any money left.
+         *
+         * @return true if @ref player_money is greater than zero, false otherwise.
          */
-        bool HasMoney() const{ return player_money > 0;}
+        bool HasMoney() const{ return player_money > 0; }
 
         /**
-         * @brief Checks if the player's hand has been split.
+         * @brief Checks if the player currently has split hands.
          *
-         * A split occurs when the player has more than one active hand.
+         * A split is considered to have occurred when the player holds more than
+         * one active hand in @ref PlayerHand.
          *
          * @return true if the player has more than one hand, false otherwise.
          */
         bool IsHandSplitted() const { return PlayerHand.size() > 1; }
 
-        // ----------------- Hand management helpers -----------------
-
         /**
-         * @brief Adds a card to the active hand.
+         * @brief Adds a card to the active hand of the player from the deck.
          *
-         * The exact behavior (which hand is used) depends on the implementation
-         * in the source file.
+         * This function determines which hand receives the card (considering split
+         * scenarios) and pushes the card into that hand.
          *
-         * @param card Card to be added to the player's hand.
+         * @param card The card to be added.
          */
         void AddCard(const Cards::Card &card);
 
         /**
-         * @brief Prints the player's hand(s) to standard output.
+         * @brief Prints all player hands and their cards to standard output.
          *
-         * Useful for debugging and showing the cards held by the player.
-         * in console.
+         * Primarily used for console-based visualization and debugging.
          */
         void ShowHand() const;
 
         /**
-         * @brief Initializes the player's hand by drawing initial cards.
+         * @brief Initializes the player's hand(s) at the start of the round.
          *
-         * Typically draws the starting number of cards from the deck according to
-         * the rules. Default is 2 cards per player at start.
+         * Draws the initial number of cards from the provided deck and sets up
+         * the player's first hand.
          *
-         * @param deck Reference to the deck used to deal cards.
+         * @param deck The deck from which cards are drawn.
          */
         void InitHand(Cards& deck);
 
         /**
          * @struct Hand
-         * @brief Represents a single hand of cards held by the player.
+         * @brief Represents a single Blackjack hand held by the player.
          *
-         * Supports multiple hands when the player splits.
+         * Each hand contains its own vector of cards and an index. When the
+         * player splits, multiple Hand instances are stored in @ref PlayerHand.
          */
         typedef struct {
-            std::vector<Cards::Card> cards; ///< Cards in this hand.
-            int hand_index;                 ///< Index of this hand for split logic.
+            std::vector<Cards::Card> cards;
+            int hand_index;
         } Hand;
 
         /**
-         * @brief Collection of all hands currently owned by the player.
+         * @brief Collection of all active hands owned by the player.
          *
-         * When the player splits, this vector stores multiple independent hands.
+         * Normally contains one hand, but may contain multiple if the
+         * player performs a split.
          */
         std::vector<Hand> PlayerHand;
 
         /**
-         * @brief Calculates the score of the player's hand.
+         * @brief Computes the total score of the player's current hand.
          *
-         * The scoring rules should follow Blackjack conventions (e.g., Ace can be
-         * counted as 1 or 11). The exact behavior depends on the implementation.
+         * The score calculation follows Blackjack rules, including proper
+         * handling of Aces (1 or 11 depending on optimal value).
          *
-         * @return int Total score of the current hand.
+         * @return int The computed hand score.
          */
         int HandScore() const;
 
         /**
          * @brief Determines if the player should draw another card.
          *
-         * Default behavior: the player takes cards until reaching at least 17.
+         * Default behavior: draw while the score is below 17.
          *
-         * @return true if the player wants/needs another card, false otherwise.
+         * @return true if another card should be drawn, otherwise false.
          */
-        bool NeedCard() const{ return HandScore() < 17; }
-
+        bool NeedCard() const{ return HandScore() < 17; } 
 
         /**
-         * @brief Checks if the player has busted (score over 21).
-         * @return true if the player's score exceeds 21, false otherwise.
+         * @brief Checks whether the player has exceeded 21.
+         *
+         * @return true if the hand score is greater than 21, false otherwise.
          */
         bool isBust() const { return HandScore() > 21; }
 
         /**
-         * @brief Checks if the player has a natural Blackjack.
+         * @brief Checks whether the player has a natural Blackjack.
          *
-         * A Blackjack occurs when the player has exactly one hand, that hand
-         * has exactly two cards, and the hand score equals 21.
+         * A natural Blackjack occurs when the player has exactly two cards
+         * in a single hand and the total score equals to the game mode definition
+         * of blackjack (Classic=21, Round=20 and Extreme=25).
          *
          * @return true if the player has Blackjack, false otherwise.
          */
-        bool isBlackjack() const {
-            return PlayerHand.size() == 1 &&
-                PlayerHand[0].cards.size() == 2 &&
-                HandScore() == 21;
+        bool isBlackjack() const { 
+            return PlayerHand.size() == 1 && 
+                                    PlayerHand[0].cards.size() == 2 && 
+                                    HandScore() == rules_.GetWinPoint(); 
         }
-
-    // ----------------- IPlayer interface implementation -----------------
+        
         /**
          * @brief Decides the action to take for a specific hand.
          *
-         * @param table Reference to the game table containing current game state
-         * @param player_index Index of the player making the decision
-         * @param hand_index Index of the hand to decide action for (supports split hands)
-         * @return ITable::Action The action chosen (e.g., hit, stand, double down, split)
+         * This function implements the decision logic for a given player and hand
+         * based on the current table state. It returns one of the allowed actions
+         * such as Stand, Hit, Double, or Split.
+         *
+         * @param table Reference to the game table containing the current game state.
+         * @param player_index Index of the player making the decision.
+         * @param hand_index Index of the hand to decide the action for.
+         * @return ITable::Action The chosen action for this hand.
          */
         virtual ITable::Action DecidePlayerAction(const ITable& table, int player_index, int hand_index) override;
-
+        
         /**
-         * @brief Decides the initial bet amount for a round.
+         * @brief Decides the initial bet amount for a new round.
          *
-         * @param table Reference to the game table containing current game state
-         * @param player_index Index of the player making the bet
-         * @return int The bet amount to place
+         * The decision may depend on the player's current money, table state,
+         * or any strategy implemented in this method.
+         *
+         * @param table Reference to the game table containing the current game state.
+         * @param player_index Index of the player placing the bet.
+         * @return int The amount of the initial bet.
          */
         virtual int DecideInitialBet(const ITable& table, int player_index) override;
-
+        
         /**
-         * @brief Decides whether to use a safe/insurance option when the dealer gets an ace.
+         * @brief Decides whether to use the safe/insurance option.
          *
-         * @param table Reference to the game table containing current game state
-         * @param player_index Index of the player making the decision
-         * @return bool True if the player wants to use the safe option, false otherwise
+         * This method is called when the dealer shows an Ace and the rules
+         * allow an insurance (safe) bet.
+         *
+         * @param table Reference to the game table containing the current game state.
+         * @param player_index Index of the player making the decision.
+         * @return true if the player chooses to use the safe option, false otherwise.
          */
         virtual bool DecideUseSafe(const ITable& table, int player_index) override;
 
+        virtual ~Jaco_player() = default;
+
+    private:
+
         /**
-         * @brief Default virtual destructor.
+         * @brief Default destructor.
          */
-        ~Jaco_player() = default;
+        const jaco_rules& rules_;
 };
+
+#endif // JACO_PLAYER_H

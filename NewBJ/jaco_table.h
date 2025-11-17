@@ -3,7 +3,18 @@
 #define JACO_TABLE_H
 #include "Interface/itable.h"
 
+/**
+ * @class jaco_table
+ * @brief Concrete implementation of the ITable interface for a Blackjack game.
+ *
+ * This class manages the state of the Blackjack table, including player hands,
+ * bets, dealer hand and money, and the flow of each round. It provides the
+ * concrete behavior for all methods defined in the ITable interface:
+ * dealing cards, starting and finishing rounds, and applying player actions.
+ */
 class jaco_table : public ITable {
+    public:
+
     /**
      * @brief Gets a specific hand for a player.
      *
