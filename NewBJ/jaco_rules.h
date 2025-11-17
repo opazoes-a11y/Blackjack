@@ -41,6 +41,10 @@ public:
         EXTREME  ///< Variant with 2 decks and winning score at 25.
     };
 
+    jaco_rules(){
+        GameRules = GetGameMode();
+    }
+
     /**
      * @brief Asks the user to select a game mode.
      *
@@ -121,7 +125,7 @@ public:
      */
     int DealerStop() const override{ return kDealerStop; }
 
-    ~jaco_rules() = default;
+    ~jaco_rules() = default; 
 
 private:
     /**
