@@ -75,14 +75,14 @@ class jaco_player : public IPlayer {
         bool IsHandSplitted() const { return PlayerHand.size() > 1; }
 
         /**
-         * @brief Adds a card to the active hand of the player from the deck.
+         * @brief Adds a card to the hand with corresponding index of the player from the deck.
          *
          * This function determines which hand receives the card (considering split
          * scenarios) and pushes the card into that hand.
          *
          * @param card The card to be added.
          */
-        void AddCard(const Cards::Card &card);
+        void AddCard(const Cards::Card &card, int hand_index);
 
         /**
          * @brief Prints all player hands and their cards to standard output.
@@ -129,7 +129,7 @@ class jaco_player : public IPlayer {
          *
          * @return int The computed hand score.
          */
-        int HandScore() const;
+        int HandScore(int hand_index) const;
 
         /**
          * @brief Determines if the player should draw another card.
@@ -138,14 +138,15 @@ class jaco_player : public IPlayer {
          *
          * @return true if another card should be drawn, otherwise false.
          */
-        bool NeedCard() const{ return HandScore() < 17; } 
+        bool NeedCard(int hand_index) const{ return HandScore(hand_index) < 17; } 
 
         /**
-         * @brief Checks whether the player has exceeded 21.
+         * @brief Checks whether the player has exceeded Blackjack score limit
+         * adjusted according to game mode.
          *
          * @return true if the hand score is greater than 21, false otherwise.
          */
-        bool isBust() const { return HandScore() > 21; }
+        bool isBust(int hand_index) const { return HandScore(hand_index) > rules_.GetWinPoint(); }
 
         /**
          * @brief Checks whether the player has a natural Blackjack.
@@ -155,11 +156,12 @@ class jaco_player : public IPlayer {
          * of blackjack (Classic=21, Round=20 and Extreme=25).
          *
          * @return true if the player has Blackjack, false otherwise.
+         * @todo Adjust to support multiple hands in case of splits.
          */
         bool isBlackjack() const { 
             return PlayerHand.size() == 1 && 
                                     PlayerHand[0].cards.size() == 2 && 
-                                    HandScore() == rules_.GetWinPoint(); 
+                                    HandScore(0) == rules_.GetWinPoint(); 
         }
         
         /**
