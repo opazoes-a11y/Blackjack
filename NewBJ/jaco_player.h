@@ -13,7 +13,7 @@
  * It also provides helper methods for hand scoring and basic Blackjack
  * conditions such as bust and Blackjack detection.
  */
-class Jaco_player : public IPlayer {
+class jaco_player : public IPlayer {
     public:
         /**
          * @brief Constructs a player with a given index and initial money.
@@ -25,7 +25,8 @@ class Jaco_player : public IPlayer {
          *
          * @param player_index Index of the player at the table.
          */
-        Jaco_player(int player_index, const jaco_rules& rules) 
+        jaco_player(int player_index, 
+                    const jaco_rules& rules) 
             : player_index(next_player_index++), 
             player_money(jaco_rules::kPlayerStartMoney), 
             current_bet(0),
@@ -199,7 +200,7 @@ class Jaco_player : public IPlayer {
          */
         virtual bool DecideUseSafe(const ITable& table, int player_index) override;
 
-        virtual ~Jaco_player() = default;
+        virtual ~jaco_player() = default;
 
     private:
 
