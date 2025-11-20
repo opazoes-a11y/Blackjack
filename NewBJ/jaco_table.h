@@ -2,7 +2,10 @@
 #ifndef JACO_TABLE_H
 #define JACO_TABLE_H
 #include "Interface/itable.h"
-#include "NewBJ/jaco_player"
+#include "NewBJ/jaco_player.h"
+#include "NewBJ/jaco_rules.h"
+#include "NewBJ/cards.h"
+#include <vector>
 
 /**
  * @class jaco_table
@@ -14,7 +17,12 @@
  * dealing cards, starting and finishing rounds, and applying player actions.
  */
 class jaco_table : public ITable {
-    public:
+public:
+    /**
+     * @brief Constructs a table using provided rules and initializes dealer money.
+     * @param rules Rule set controlling bets, decks and limits.
+     */
+    explicit jaco_table(const jaco_rules& rules = jaco_rules());
 
     /**
      * @brief Gets a specific hand for a player.
@@ -130,6 +138,57 @@ class jaco_table : public ITable {
      * @return RoundEndInfo Information about the round results
      */
     RoundEndInfo FinishRound() override;
+
+private:
+
+    /**
+     * @brief Maps an internal deck card to interface card type.
+     * @param card Card from @ref Cards.
+     * @return ITable::Card with matching value and suit.
+     */
+    Card ConvertCard(const Cards::Card& card) const;
+    
+    /**
+     * @brief Calculates dealer score with ace softening logic.
+     * @return Current dealer total.
+     */
+    int DealerHandScore() const;
+    
+    /**
+     * @brief Ensures player containers are created up to @p player_index.
+     * @param player_index Target player index.
+     */
+    void EnsurePlayer(int player_index);
+    
+    /**
+     * @brief Syncs bet vector sizes with number of player hands.
+     * @param player_index Target player index.
+     */
+    void EnsureHandBets(int player_index);
+
+    /** @brief Active rules governing limits and thresholds. */
+    jaco_rules rules_;
+
+    /** @brief Current deck used for dealing. */
+    Cards deck_;
+
+    /** @brief Players seated at the table. */
+    std::vector<jaco_player> players_;
+
+    /** @brief Dealer current hand. */
+    Hand dealer_hand_;
+
+    /** @brief Dealer bankroll. */
+    int dealer_money_;
+
+    /** @brief Initial bet per player (one per seat). */
+    std::vector<int> initial_bets_;
+
+    /** @brief Safe/insurance bet per player. */
+    std::vector<int> safe_bets_;
+
+    /** @brief Bets per hand per player (supports splits). */
+    std::vector<std::vector<int>> hands_bets_;
 };
 
 #endif // JACO_TABLE_H

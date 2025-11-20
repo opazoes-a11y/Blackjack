@@ -10,11 +10,13 @@ void jaco_player::AddCard(const Cards::Card& card, int hand_index){
 	if(PlayerHand.empty()){
 		std::cout << "Error: No hand initialized for player " << player_index << std::endl;
 		return;
-	} else if(PlayerHand.size() == 1){
-		PlayerHand[0].cards.push_back(card);
+	}
+	const int target = (PlayerHand.size() == 1) ? 0 : hand_index;
+	if(target < 0 || target >= static_cast<int>(PlayerHand.size())){
+		std::cout << "Error: Invalid hand index " << hand_index << " for player " << player_index << std::endl;
 		return;
 	}
-	PlayerHand[hand_index].cards.push_back(card);
+	PlayerHand[target].cards.push_back(card);
 	return;
 }
 
@@ -49,10 +51,13 @@ void jaco_player::InitHand(Cards& deck){
 }
 
 int jaco_player::HandScore(int hand_index) const{
+	if(hand_index < 0 || hand_index >= static_cast<int>(PlayerHand.size())){
+		return 0;
+	}
 	int score = 0;
 	int aces = 0;
 	// Iterate though cards in the specified hand
-	for(auto& c : PlayerHand[hand_index].cards){
+	for(const auto& c : PlayerHand[hand_index].cards){
 		// Add score according to card value
 		switch(c.fig){
 			case Cards::Value::Ace: 	score+=11; ++aces;
@@ -91,13 +96,15 @@ ITable::Action jaco_player::DecidePlayerAction(const ITable& table, int player_i
 }
 
 int jaco_player::DecideInitialBet(const ITable& table, int player_index){
-	if(player_money >= rules_.MinimumInitialBet() && (HandScore(0) > 15 || HandScore(1) > 15)){
+	const int hand0 = PlayerHand.empty() ? 0 : HandScore(0);
+	const int hand1 = (PlayerHand.size() > 1) ? HandScore(1) : 0;
+	if(player_money >= rules_.MinimumInitialBet() && (hand0 > 15 || hand1 > 15)){
 		current_bet = rules_.MinimumInitialBet();
 		return rules_.MinimumInitialBet();
-	} else if(player_money > rules_.MinimumInitialBet()*4 && (HandScore(0) > 20 || HandScore(1) > 20)){
+	} else if(player_money > rules_.MinimumInitialBet()*4 && (hand0 > 20 || hand1 > 20)){
 		current_bet = rules_.MinimumInitialBet() * 4;
 		return rules_.MinimumInitialBet() * 4;
-	} else if(player_money > rules_.MaximumInitialBet() && (isBlackjack(0) || isBlackjack(1))){
+	} else if(player_money > rules_.MaximumInitialBet() && ((PlayerHand.size() > 0 && isBlackjack(0)) || (PlayerHand.size() > 1 && isBlackjack(1)))){
 		current_bet = rules_.MaximumInitialBet();
 		return rules_.MaximumInitialBet();
 	} else {

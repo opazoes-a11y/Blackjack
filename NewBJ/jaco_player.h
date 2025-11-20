@@ -139,7 +139,11 @@ class jaco_player : public IPlayer {
          *
          * @return true if another card should be drawn, otherwise false.
          */
-        bool NeedCard(int hand_index) const{ return HandScore(hand_index) < 17; } 
+        bool NeedCard(int hand_index) const{ 
+            return hand_index >= 0 &&
+                   hand_index < static_cast<int>(PlayerHand.size()) &&
+                   HandScore(hand_index) < 17; 
+        } 
 
         /**
          * @brief Checks whether the player has exceeded Blackjack score limit
@@ -147,7 +151,11 @@ class jaco_player : public IPlayer {
          *
          * @return true if the hand score is greater than 21, false otherwise.
          */
-        bool isBust(int hand_index) const { return HandScore(hand_index) > rules_.GetWinPoint(); }
+        bool isBust(int hand_index) const { 
+            return hand_index >= 0 &&
+                   hand_index < static_cast<int>(PlayerHand.size()) &&
+                   HandScore(hand_index) > rules_.GetWinPoint(); 
+        }
 
         /**
          * @brief Checks whether the player has a natural Blackjack.
@@ -157,12 +165,12 @@ class jaco_player : public IPlayer {
          * of blackjack (Classic=21, Round=20 and Extreme=25).
          *
          * @return true if the player has Blackjack, false otherwise.
-         * @todo Adjust to support multiple hands in case of splits.
          */
         bool isBlackjack(int hand_index) const { 
-            return PlayerHand.size() == 1 && 
-                                    PlayerHand[hand_index].cards.size() == 2 && 
-                                    HandScore(hand_index) == rules_.GetWinPoint(); 
+            return hand_index >= 0 &&
+                   hand_index < static_cast<int>(PlayerHand.size()) &&
+                   PlayerHand[hand_index].cards.size() == 2 && 
+                   HandScore(hand_index) == rules_.GetWinPoint(); 
         }
         
         /**

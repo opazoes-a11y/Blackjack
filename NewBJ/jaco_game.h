@@ -3,7 +3,8 @@
 #define JACO_GAME_H
 #include "Interface/igame.h"
 
-class JGame : public IGame {
+class jaco_game : public IGame {
+public:
     void PlayGame() override;
 };
 
