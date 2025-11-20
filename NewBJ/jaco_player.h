@@ -159,10 +159,10 @@ class jaco_player : public IPlayer {
          * @return true if the player has Blackjack, false otherwise.
          * @todo Adjust to support multiple hands in case of splits.
          */
-        bool isBlackjack() const { 
+        bool isBlackjack(int hand_index) const { 
             return PlayerHand.size() == 1 && 
-                                    PlayerHand[0].cards.size() == 2 && 
-                                    HandScore(0) == rules_.GetWinPoint(); 
+                                    PlayerHand[hand_index].cards.size() == 2 && 
+                                    HandScore(hand_index) == rules_.GetWinPoint(); 
         }
         
         /**
