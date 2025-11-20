@@ -5,7 +5,7 @@
 #include "NewBJ/jaco_rules.h"
 #include "NewBJ/cards.h"
 /**
- * @class Jaco_player
+ * @class jaco_player
  * @brief Represents a Blackjack player with hand management and betting logic.
  *
  * This class implements the IPlayer interface and stores all the state
@@ -19,11 +19,12 @@ class jaco_player : public IPlayer {
          * @brief Constructs a player with a given index and initial money.
          *
          * Initializes the player identifier, starting money using
-         * @param jaco_rules::kPlayerStartMoney, and sets the current bet to zero.
-         * Uses @param next_player_index as static int to increment value
-         * when a player is created.
+         * @ref jaco_rules::kPlayerStartMoney, and sets the current bet to zero.
+         * Uses @ref next_player_index as a static counter to assign unique
+         * player indices when a new player is created.
          *
-         * @param player_index Index of the player at the table.
+         * @param player_index Index of the player at the table (unused, kept for API compatibility).
+         * @param rules Reference to the active game rules.
          */
         jaco_player(int player_index, 
                     const jaco_rules& rules) 
@@ -158,10 +159,10 @@ class jaco_player : public IPlayer {
          * @return true if the player has Blackjack, false otherwise.
          * @todo Adjust to support multiple hands in case of splits.
          */
-        bool isBlackjack(int hand_index) const { 
+        bool isBlackjack() const { 
             return PlayerHand.size() == 1 && 
-                                    PlayerHand[hand_index].cards.size() == 2 && 
-                                    HandScore(hand_index) == rules_.GetWinPoint(); 
+                                    PlayerHand[0].cards.size() == 2 && 
+                                    HandScore(0) == rules_.GetWinPoint(); 
         }
         
         /**
@@ -202,12 +203,18 @@ class jaco_player : public IPlayer {
          */
         virtual bool DecideUseSafe(const ITable& table, int player_index) override;
 
+        /**
+         * @brief Default destructor.
+         */
         virtual ~jaco_player() = default;
 
     private:
 
         /**
-         * @brief Default destructor.
+         * @brief Reference to the active game rules used by this player.
+         *
+         * Used to adapt behaviors such as Blackjack winning point and bust limit
+         * depending on the selected game mode.
          */
         const jaco_rules& rules_;
 };
