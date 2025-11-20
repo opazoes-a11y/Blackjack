@@ -84,15 +84,71 @@ int jaco_player::HandScore(int hand_index) const{
 	return score;
 }
 
-/** @todo Add reference to ITable
+/**
+ * @brief Basic strategy-like decision for player action including split heuristics.
  */
 ITable::Action jaco_player::DecidePlayerAction(const ITable& table, int player_index, int hand_index){
-	// Simple logic: Hit if score < 17, else Stand
-	if(NeedCard(hand_index)){
-		return ITable::Action::Hit;
-	} else {
+	// Fallback guard.
+	if(hand_index < 0 || hand_index >= static_cast<int>(PlayerHand.size())){
 		return ITable::Action::Stand;
 	}
+
+	const auto& hand = PlayerHand[hand_index].cards;
+	// Choose dealer upcard value (treat face cards as 10, Ace as 11 surrogate).
+	int dealer_up = 0;
+	const auto dealer_card = table.GetDealerCard();
+	switch(dealer_card.value_){
+		case ITable::Value::ACE: dealer_up = 11; break;
+		case ITable::Value::TWO: dealer_up = 2; break;
+		case ITable::Value::THREE: dealer_up = 3; break;
+		case ITable::Value::FOUR: dealer_up = 4; break;
+		case ITable::Value::FIVE: dealer_up = 5; break;
+		case ITable::Value::SIX: dealer_up = 6; break;
+		case ITable::Value::SEVEN: dealer_up = 7; break;
+		case ITable::Value::EIGHT: dealer_up = 8; break;
+		case ITable::Value::NINE: dealer_up = 9; break;
+		default: dealer_up = 10; break;
+	}
+
+	// Split logic only when exactly 2 cards and same rank.
+	if(hand.size() == 2 && hand[0].fig == hand[1].fig){
+		const auto pair_val = hand[0].fig;
+		const bool dealer_weak_2_7 = dealer_up >= 2 && dealer_up <= 7;
+		const bool dealer_weak_2_6 = dealer_up >= 2 && dealer_up <= 6;
+
+		if(pair_val == Cards::Value::Ace){
+			return ITable::Action::Split; // Always split A,A
+		}
+		if(pair_val == Cards::Value::Eight){
+			return ITable::Action::Split; // Always split 8,8
+		}
+		if(pair_val == Cards::Value::Two || pair_val == Cards::Value::Three){
+			if(dealer_weak_2_7) return ITable::Action::Split;
+		}
+		if(pair_val == Cards::Value::Seven){
+			if(dealer_weak_2_7) return ITable::Action::Split;
+		}
+		if(pair_val == Cards::Value::Six){
+			if(dealer_weak_2_6) return ITable::Action::Split;
+		}
+		if(pair_val == Cards::Value::Nine){
+			if((dealer_up >= 2 && dealer_up <= 6) || dealer_up == 8 || dealer_up == 9){
+				return ITable::Action::Split;
+			}
+		}
+		if(pair_val == Cards::Value::Four){
+			if(dealer_up == 5 || dealer_up == 6){
+				return ITable::Action::Split;
+			}
+		}
+		// Never split 5s, 10s/face; fall through to hit/stand logic.
+	}
+
+	// Simple hit/stand heuristic: hit below 17.
+	if(NeedCard(hand_index)){
+		return ITable::Action::Hit;
+	}
+	return ITable::Action::Stand;
 }
 
 int jaco_player::DecideInitialBet(const ITable& table, int player_index){

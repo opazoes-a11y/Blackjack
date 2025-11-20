@@ -17,6 +17,8 @@ jaco_rules::GameType jaco_rules::GetGameMode(){
         case 3:
             return GameType::EXTREME;
     }
+    // Fallback to classic if input is invalid.
+    return GameType::CLASSIC;
 }
 
 

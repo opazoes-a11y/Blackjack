@@ -4,7 +4,6 @@ workspace "Blackjack"
     startproject "Blackjack"
     location "build"
 
-
 ------------------------
 -- Executable: Blackjack
 ------------------------
@@ -13,28 +12,30 @@ project "Blackjack"
     language "C++"
     cppdialect "C++17"
 
-    -- Solo los .cc del ejecutable
+    -- Source files for the NewBJ implementation
     files {
-        "main.cc",
-        "game.cc",
-        "cards.cc",
-        "dealer.cc",
-        "player.cc"
+        "NewBJ/main.cc",
+        "NewBJ/jaco_game.cc",
+        "NewBJ/jaco_table.cc",
+        "NewBJ/jaco_player.cc",
+        "NewBJ/cards.cc",
+        "NewBJ/jaco_rules.cc"
     }
 
-    -- Carpeta raíz para todos los .h (incluye zagerfe_player.h)
+    -- Root include dirs for headers
     includedirs {
+        ".",
+        "NewBJ",
+        "Interface"
+    }
+
+    -- External lib dirs (none required currently)
+    libdirs {
         "."
     }
 
-    -- Donde está el .lib externo
-    libdirs {
-        "."   
-    }
-
-    -- Librerías a enlazar
+    -- Libraries to link (empty placeholder)
     links {
-        
     }
 
     filter "system:windows"
