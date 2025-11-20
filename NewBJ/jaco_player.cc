@@ -3,15 +3,9 @@
 #define JACO_PLAYER_CC
 #include "NewBJ/jaco_player.h"
 
-/**
- * @brief Static player index initialized to 0 for unique player identification
- *  and auto-increment during player creation.
- */
+// Initialize to 0 variable static next_player_index to auto-increment player IDs
 int jaco_player::next_player_index = 0;
 
-/**
- * @brief Adds a card to the specified hand of the player from the deck.
- */
 void jaco_player::AddCard(const Cards::Card& card, int hand_index){
 	if(PlayerHand.empty()){
 		std::cout << "Error: No hand initialized for player " << player_index << std::endl;
@@ -42,14 +36,6 @@ void jaco_player::ShowHand() const{
 	}
 }
 
-/**
- * @brief Initializes the player's hand(s) at the start of the round.
- *
- * Draws the initial number of cards from the provided deck and sets up
- * the player's first hand, clearing any previous hands.
- *
- * @param deck The deck from which cards are drawn.
- */
 void jaco_player::InitHand(Cards& deck){
 	PlayerHand.clear(); //Erase hands
 	//Create first hand
@@ -62,13 +48,12 @@ void jaco_player::InitHand(Cards& deck){
 	PlayerHand.push_back(first_hand);
 }
 
-/**
- * @brief Counts the score of the specified payer hand.
- */
 int jaco_player::HandScore(int hand_index) const{
 	int score = 0;
 	int aces = 0;
+	// Iterate though cards in the specified hand
 	for(auto& c : PlayerHand[hand_index].cards){
+		// Add score according to card value
 		switch(c.fig){
 			case Cards::Value::Ace: 	score+=11; ++aces;
 				break;
