@@ -1,6 +1,7 @@
 #pragma once
 #ifndef JACO_RULES_H
 #define JACO_RULES_H
+#include <iostream>
 #include "Interface/irules.h"
 
 /**
