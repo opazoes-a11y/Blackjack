@@ -79,6 +79,34 @@ int jaco_player::HandScore(int hand_index) const{
 	return score;
 }
 
+/** @todo Add reference to ITable
+ */
+ITable::Action jaco_player::DecidePlayerAction(const ITable& table, int player_index, int hand_index){
+	// Simple logic: Hit if score < 17, else Stand
+	if(NeedCard(hand_index)){
+		return ITable::Action::Hit;
+	} else {
+		return ITable::Action::Stand;
+	}
+}
+
+int jaco_player::DecideInitialBet(const ITable& table, int player_index){
+	if(player_money >= rules_.MinimumInitialBet() && (HandScore(0) > 15 || HandScore(1) > 15)){
+		return rules_.MinimumInitialBet();
+	} else if(player_money > rules_.MinimumInitialBet()*4 && (HandScore(0) > 20 || HandScore(1) > 20)){
+		return rules_.MinimumInitialBet() * 4;
+	} else if(player_money > rules_.MaximumInitialBet() && (isBlackjack(0) || isBlackjack(1))){
+		return rules_.MaximumInitialBet();
+	} else {
+		return 0; // No bet
+	}
+}
+
+bool jaco_player::DecideUseSafe(const ITable& table, int player_index){
+	return (player_money < rules_.MinimumInitialBet());
+}
+
+
 
 
 
