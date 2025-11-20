@@ -2,6 +2,7 @@
 #ifndef JACO_TABLE_H
 #define JACO_TABLE_H
 #include "Interface/itable.h"
+#include "NewBJ/jaco_player"
 
 /**
  * @class jaco_table

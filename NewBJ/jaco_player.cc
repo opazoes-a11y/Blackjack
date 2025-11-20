@@ -92,12 +92,16 @@ ITable::Action jaco_player::DecidePlayerAction(const ITable& table, int player_i
 
 int jaco_player::DecideInitialBet(const ITable& table, int player_index){
 	if(player_money >= rules_.MinimumInitialBet() && (HandScore(0) > 15 || HandScore(1) > 15)){
+		current_bet = rules_.MinimumInitialBet();
 		return rules_.MinimumInitialBet();
 	} else if(player_money > rules_.MinimumInitialBet()*4 && (HandScore(0) > 20 || HandScore(1) > 20)){
+		current_bet = rules_.MinimumInitialBet() * 4;
 		return rules_.MinimumInitialBet() * 4;
 	} else if(player_money > rules_.MaximumInitialBet() && (isBlackjack(0) || isBlackjack(1))){
+		current_bet = rules_.MaximumInitialBet();
 		return rules_.MaximumInitialBet();
 	} else {
+		current_bet = 0;
 		return 0; // No bet
 	}
 }
