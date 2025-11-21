@@ -123,7 +123,7 @@ void jaco_game::PlayGame() {
   table.StartRound();
 
   // Place a minimum bet if possible.
-  const int player_money = table.GetPlayerMoney(player_index);
+  const int player_money = decision_player.player_money;
   const int bet = std::min(rules.MinimumInitialBet(), player_money);
   if (bet <= 0 ||
       table.PlayInitialBet(player_index, bet) != ITable::Result::Ok) {

@@ -15,6 +15,11 @@ project "Blackjack"
     -- Source files for the NewBJ implementation
     files {
         "NewBJ/main.cc",
+        "NewBJ/jaco_player.h",
+        "NewBJ/jaco_game.h",
+        "NewBJ/jaco_table.h",
+        "NewBJ/jaco_rules.h",
+        "NewBJ/cards.h",
         "NewBJ/jaco_game.cc",
         "NewBJ/jaco_table.cc",
         "NewBJ/jaco_player.cc",

@@ -1,4 +1,5 @@
 #include "NewBJ/jaco_game.h"
+#include "NewBJ/jaco_player.h"
 #include <iostream>
 #include <string>
 
@@ -9,7 +10,8 @@
  * the auto-player logic, and optionally repeats while the user agrees.
  */
 int main() {
-  while (true) {
+  bool playing = true;
+  while (playing) {
     jaco_game game;
     game.PlayGame();
 
@@ -18,7 +20,7 @@ int main() {
     std::getline(std::cin, ans);
     if (ans.empty() ||
         (ans[0] != 'y' && ans[0] != 'Y' && ans[0] != 's' && ans[0] != 'S')) {
-      break;
+        playing = false;
     }
   }
   return 0;
