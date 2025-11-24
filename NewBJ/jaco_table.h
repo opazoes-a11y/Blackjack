@@ -159,6 +159,7 @@ private:
      * @brief Ensures player containers are created up to @p player_index.
      * @param player_index Target player index.
      * @return true if the player index is valid within current players.
+     * @note This function no longer creates players; it only syncs bookkeeping.
      */
     bool EnsurePlayer(int player_index);
     

@@ -106,7 +106,7 @@ bool jaco_table::EnsurePlayer(int player_index) {
     return false;
   }
 
-  // Keep auxiliary vectors aligned with existing players without creating new ones.
+  /// Align auxiliary vectors with existing players without creating new ones.
   if (static_cast<int>(initial_bets_.size()) < static_cast<int>(players_.size())) {
     initial_bets_.resize(players_.size(), 0);
   }
@@ -365,7 +365,7 @@ ITable::Result jaco_table::ApplyPlayerAction(int player_index, int hand_index,
  * @brief Prepares a new round resetting deck, dealer card and player state.
  */
 void jaco_table::StartRound() {
-  // Ensure bookkeeping vectors match current player count without minting new players.
+  /// Ensure bookkeeping vectors match current player count without minting new players.
   EnsurePlayer(static_cast<int>(players_.size()) - 1);
 
   deck_ = Cards();
