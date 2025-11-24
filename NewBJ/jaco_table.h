@@ -22,7 +22,8 @@ public:
      * @brief Constructs a table using provided rules and initializes dealer money.
      * @param rules Rule set controlling bets, decks and limits.
      */
-    explicit jaco_table(const jaco_rules& rules = jaco_rules());
+    explicit jaco_table(const jaco_rules& rules,
+                        std::vector<jaco_player>& players);
 
     /**
      * @brief Gets a specific hand for a player.
@@ -157,8 +158,9 @@ private:
     /**
      * @brief Ensures player containers are created up to @p player_index.
      * @param player_index Target player index.
+     * @return true if the player index is valid within current players.
      */
-    void EnsurePlayer(int player_index);
+    bool EnsurePlayer(int player_index);
     
     /**
      * @brief Syncs bet vector sizes with number of player hands.
@@ -172,8 +174,8 @@ private:
     /** @brief Current deck used for dealing. */
     Cards deck_;
 
-    /** @brief Players seated at the table. */
-    std::vector<jaco_player> players_;
+    /** @brief Players seated at the table (owned externally). */
+    std::vector<jaco_player>& players_;
 
     /** @brief Dealer current hand. */
     Hand dealer_hand_;

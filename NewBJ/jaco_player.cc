@@ -175,6 +175,4 @@ bool jaco_player::DecideUseSafe(const ITable& table, int player_index){
 
 
 
-
-
 #endif // JACO_PLAYER_CC

@@ -4,15 +4,15 @@
  * @brief Builds the table, initializes dealer money and reserves player slots.
  * @param rules Rule set controlling limits and thresholds.
  */
-jaco_table::jaco_table(const jaco_rules& rules)
+jaco_table::jaco_table(const jaco_rules& rules, std::vector<jaco_player>& players)
     : rules_(rules),
       deck_(),
-      players_(),
+      players_(players),
       dealer_hand_(),
       dealer_money_(rules.InitialDealerMoney()),
-      initial_bets_(),
-      safe_bets_(),
-      hands_bets_() {
+      initial_bets_(players.size(), 0),
+      safe_bets_(players.size(), 0),
+      hands_bets_(players.size(), std::vector<int>(1, 0)) {
   players_.reserve(ITable::kMaxPlayers);
 }
 
@@ -101,14 +101,23 @@ int jaco_table::DealerHandScore() const {
  * @brief Ensures internal storage exists for requested player index.
  * @param player_index Index to satisfy.
  */
-void jaco_table::EnsurePlayer(int player_index) {
-  while (static_cast<int>(players_.size()) <= player_index) {
-    // Parallel vectors grow together to keep indices aligned.
-    players_.emplace_back(static_cast<int>(players_.size()), rules_);
-    initial_bets_.push_back(0);
-    safe_bets_.push_back(0);
-    hands_bets_.push_back({0});
+bool jaco_table::EnsurePlayer(int player_index) {
+  if (player_index < 0 || player_index >= static_cast<int>(players_.size())) {
+    return false;
   }
+
+  // Keep auxiliary vectors aligned with existing players without creating new ones.
+  if (static_cast<int>(initial_bets_.size()) < static_cast<int>(players_.size())) {
+    initial_bets_.resize(players_.size(), 0);
+  }
+  if (static_cast<int>(safe_bets_.size()) < static_cast<int>(players_.size())) {
+    safe_bets_.resize(players_.size(), 0);
+  }
+  if (static_cast<int>(hands_bets_.size()) < static_cast<int>(players_.size())) {
+    hands_bets_.resize(players_.size(), std::vector<int>(1, 0));
+  }
+
+  return true;
 }
 
 /**
@@ -222,7 +231,9 @@ int jaco_table::DealerMoney() const { return dealer_money_; }
  * @brief Draws a card from deck and adds it to player hand.
  */
 void jaco_table::DealCard(int player_index, int hand_index) {
-  EnsurePlayer(player_index);
+  if (!EnsurePlayer(player_index)) {
+    return;
+  }
   auto& player = players_[player_index];
   if (hand_index < 0 ||
       hand_index >= static_cast<int>(player.PlayerHand.size())) {
@@ -239,7 +250,9 @@ void jaco_table::DealCard(int player_index, int hand_index) {
  * @return Ok if accepted, Illegal otherwise.
  */
 ITable::Result jaco_table::PlayInitialBet(int player_index, int money) {
-  EnsurePlayer(player_index);
+  if (!EnsurePlayer(player_index)) {
+    return Result::Illegal;
+  }
   auto& player = players_[player_index];
   if (money < rules_.MinimumInitialBet() ||
       money > rules_.MaximumInitialBet() ||
@@ -267,7 +280,9 @@ ITable::Result jaco_table::PlayInitialBet(int player_index, int money) {
  * @return Ok on success, Illegal if unavailable or lacks funds.
  */
 ITable::Result jaco_table::PlaySafeBet(int player_index) {
-  EnsurePlayer(player_index);
+  if (!EnsurePlayer(player_index)) {
+    return Result::Illegal;
+  }
   auto& player = players_[player_index];
   const int base_bet = initial_bets_[player_index];
   const int safe_bet = base_bet / 2;
@@ -288,7 +303,9 @@ ITable::Result jaco_table::PlaySafeBet(int player_index) {
  */
 ITable::Result jaco_table::ApplyPlayerAction(int player_index, int hand_index,
                                              Action action) {
-  EnsurePlayer(player_index);
+  if (!EnsurePlayer(player_index)) {
+    return Result::Illegal;
+  }
   auto& player = players_[player_index];
   if (hand_index < 0 ||
       hand_index >= static_cast<int>(player.PlayerHand.size())) {
@@ -348,6 +365,9 @@ ITable::Result jaco_table::ApplyPlayerAction(int player_index, int hand_index,
  * @brief Prepares a new round resetting deck, dealer card and player state.
  */
 void jaco_table::StartRound() {
+  // Ensure bookkeeping vectors match current player count without minting new players.
+  EnsurePlayer(static_cast<int>(players_.size()) - 1);
+
   deck_ = Cards();
   deck_.shuffleCards();
   dealer_hand_.clear();
@@ -455,4 +475,3 @@ ITable::RoundEndInfo jaco_table::FinishRound() {
 
   return result;
 }
-
