@@ -98,15 +98,15 @@ ITable::Action jaco_player::DecidePlayerAction(const ITable& table, int player_i
 	int dealer_up = 0;
 	const auto dealer_card = table.GetDealerCard();
 	switch(dealer_card.value_){
-		case ITable::Value::ACE: dealer_up = 11; break;
-		case ITable::Value::TWO: dealer_up = 2; break;
-		case ITable::Value::THREE: dealer_up = 3; break;
-		case ITable::Value::FOUR: dealer_up = 4; break;
-		case ITable::Value::FIVE: dealer_up = 5; break;
-		case ITable::Value::SIX: dealer_up = 6; break;
-		case ITable::Value::SEVEN: dealer_up = 7; break;
-		case ITable::Value::EIGHT: dealer_up = 8; break;
-		case ITable::Value::NINE: dealer_up = 9; break;
+		case ITable::Value::ACE: 	dealer_up = 11; break;
+		case ITable::Value::TWO: 	dealer_up = 2; 	break;
+		case ITable::Value::THREE: 	dealer_up = 3; 	break;
+		case ITable::Value::FOUR: 	dealer_up = 4; 	break;
+		case ITable::Value::FIVE: 	dealer_up = 5; 	break;
+		case ITable::Value::SIX: 	dealer_up = 6; 	break;
+		case ITable::Value::SEVEN: 	dealer_up = 7; 	break;
+		case ITable::Value::EIGHT: 	dealer_up = 8; 	break;
+		case ITable::Value::NINE: 	dealer_up = 9; 	break;
 		default: dealer_up = 10; break;
 	}
 
