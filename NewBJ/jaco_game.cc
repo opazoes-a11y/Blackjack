@@ -88,11 +88,9 @@ void jaco_game::PlayGame() {
     // Print player money changes
     std::cout << "Player " << i << " money change: "
               << info.player_money_delta[i] << "\n";
-    // Print hand
-    for(int hand = 0; hand < players_[i].PlayerHand.size(); ++hand){
-        std::cout << "  Cards hand " << hand << ": ";
-        players_[i].ShowHand();
-    }
+    // Print hand cards
+    players_[i].ShowHand();
+    
     if (i < info.winners.size()) {
       for (size_t hand = 0; hand < info.winners[i].size(); ++hand) {
         std::cout << "  Hand " << hand << ": "

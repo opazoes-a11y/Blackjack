@@ -462,7 +462,6 @@ ITable::RoundEndInfo jaco_table::FinishRound() {
     }
 
     // Reset player state for next round
-    player.PlayerHand.clear();
     player.current_bet = 0;
     initial_bets_[i] = 0;
     safe_bets_[i] = 0;
