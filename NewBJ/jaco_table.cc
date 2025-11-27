@@ -99,7 +99,7 @@ int jaco_table::DealerHandScore() const {
 
 /**
  * @brief Ensures internal storage exists for requested player index.
- * @param player_index Index to satisfy.
+ * @param player_index Player to ensure.
  */
 bool jaco_table::EnsurePlayer(int player_index) {
   if (player_index < 0 || player_index >= static_cast<int>(players_.size())) {
@@ -416,10 +416,9 @@ ITable::RoundEndInfo jaco_table::FinishRound() {
       auto hand_result = ITable::RoundEndInfo::BetResult::Tie;
 
       const int player_score = player.HandScore(static_cast<int>(h));
-      const bool player_bust = player.isBust(static_cast<int>(h));
       const bool player_blackjack = player.isBlackjack(static_cast<int>(h));
 
-      if (player_bust) {
+      if (player.isBust(static_cast<int>(h))) {
         hand_result = ITable::RoundEndInfo::BetResult::Lose;
       } else if (dealer_blackjack) {
         if (player_blackjack) {
@@ -433,7 +432,7 @@ ITable::RoundEndInfo jaco_table::FinishRound() {
         payout = bet * 2;
         hand_result = ITable::RoundEndInfo::BetResult::Win;
       } else if (player_score > dealer_score) {
-        // Regular win (blackjack premium not modeled).
+        // Regular win 
         payout = bet * 2;
         hand_result = ITable::RoundEndInfo::BetResult::Win;
       } else if (player_score < dealer_score) {

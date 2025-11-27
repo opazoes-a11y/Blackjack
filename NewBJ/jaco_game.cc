@@ -32,17 +32,6 @@ jaco_game::jaco_game(const jaco_rules& rules, std::vector<jaco_player>& players)
 void jaco_game::PlayGame() {
   table_.StartRound();
 
-<<<<<<< HEAD
-  table.StartRound();
-
-  // Place a minimum bet if possible.
-  const int player_money = decision_player.player_money;
-  const int bet = std::min(rules.MinimumInitialBet(), player_money);
-  if (bet <= 0 ||
-      table.PlayInitialBet(player_index, bet) != ITable::Result::Ok) {
-    std::cout << "Player cannot place an initial bet.\n";
-    return;
-=======
   // Place a minimum bet for each player if possible.
   for (int player_index = 0; player_index < static_cast<int>(players_.size());
        ++player_index) {
@@ -54,7 +43,6 @@ void jaco_game::PlayGame() {
                 << " cannot place an initial bet.\n";
       continue;
     }
->>>>>>> b38220c (Fixed constructor)
   }
 
   // Offer insurance if dealer shows an Ace.

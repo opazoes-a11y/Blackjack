@@ -12,11 +12,6 @@
  * the auto-player logic, and optionally repeats while the user agrees.
  */
 int main() {
-<<<<<<< HEAD
-  bool playing = true;
-  while (playing) {
-    jaco_game game;
-=======
   jaco_rules rules;
   std::vector<jaco_player> players;
   players.reserve(4);
@@ -28,7 +23,6 @@ int main() {
   // Clear leftover newline from the game mode prompt before using getline.
   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   while (true) {
->>>>>>> b38220c (Fixed constructor)
     game.PlayGame();
 
     std::cout << "\nPlay another round? (y/n): ";
@@ -36,7 +30,7 @@ int main() {
     std::getline(std::cin, ans);
     if (ans.empty() ||
         (ans[0] != 'y' && ans[0] != 'Y' && ans[0] != 's' && ans[0] != 'S')) {
-        playing = false;
+        break;
     }
   }
   return 0;
