@@ -9,6 +9,7 @@ class jaco_game : public IGame {
 public:
     jaco_game(const jaco_rules& rules, std::vector<jaco_player>& players);
     void PlayGame() override;
+    bool IsGameOver() const;
 
 private:
     const jaco_rules& rules_;

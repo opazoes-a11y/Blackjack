@@ -27,7 +27,7 @@ jaco_game::jaco_game(const jaco_rules& rules, std::vector<jaco_player>& players)
     : rules_(rules), players_(players), table_(rules_, players_) {}
 
 /**
- * @brief Runs a simplified automatic game round using jaco_table and player decisions.
+ * @brief Runs automatic game round using jaco_table and player decisions.
  */
 void jaco_game::PlayGame() {
   table_.StartRound();
@@ -87,10 +87,12 @@ void jaco_game::PlayGame() {
   /**
    * @todo Show dealer hand cards
    */
+  
   for (size_t i = 0; i < info.player_money_delta.size(); ++i) {
     // Print player money changes
-    std::cout << "\nPlayer " << i << " money change: "
-              << info.player_money_delta[i] << "\n";
+      std::cout << "\nPlayer " << i << " money change: "
+          << info.player_money_delta[i] << "\n";
+      std::cout << "Money: " << players_[i].player_money << "\n";
     // Print hand cards
     players_[i].ShowHand();
     std::cout << "\n";
@@ -101,4 +103,19 @@ void jaco_game::PlayGame() {
       }
     }
   }
+}
+
+bool jaco_game::IsGameOver() const{
+    for (const auto& player : players_) {
+        if (player.player_money >= rules_.MinimumInitialBet()) {
+            return false;
+        }
+        if(player.player_money < rules_.MinimumInitialBet()) {
+            return true;
+        }
+    }
+    if(table_.DealerMoney() > rules_.MinimumInitialBet()) {
+        return false;
+    }
+    return true;
 }

@@ -22,16 +22,8 @@ int main() {
   jaco_game game(rules, players);
   // Clear leftover newline from the game mode prompt before using getline.
   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-  while (true) {
+  while (!game.IsGameOver()) {
     game.PlayGame();
-
-    std::cout << "\nPlay another round? (y/n): ";
-    std::string ans;
-    std::getline(std::cin, ans);
-    if (ans.empty() ||
-        (ans[0] != 'y' && ans[0] != 'Y' && ans[0] != 's' && ans[0] != 'S')) {
-        break;
-    }
   }
   return 0;
 }
