@@ -76,7 +76,7 @@ void jaco_game::PlayGame() {
           break;
         }
       }
-      // Explicitly stand once done with hits.
+      // Stand if done with hits
       table_.ApplyPlayerAction(player_index, hand, ITable::Action::Stand);
     }
   }
