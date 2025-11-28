@@ -84,6 +84,9 @@ void jaco_game::PlayGame() {
   const auto info = table_.FinishRound();
   std::cout << "Round finished. Dealer delta: " << info.croupier_money_delta
             << "\n";
+  /**
+   * @todo Show dealer hand cards
+   */
   for (size_t i = 0; i < info.player_money_delta.size(); ++i) {
     // Print player money changes
     std::cout << "\nPlayer " << i << " money change: "
