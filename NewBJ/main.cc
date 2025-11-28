@@ -20,8 +20,7 @@ int main() {
   }
 
   jaco_game game(rules, players);
-  // Clear leftover newline from the game mode prompt before using getline.
-  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  
   while (!game.IsGameOver()) {
     game.PlayGame();
   }

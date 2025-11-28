@@ -28,13 +28,13 @@ void jaco_player::AddCard(const Cards::Card& card, int hand_index){
  * @ref Cards::PrintSuit, along with each hand score using @ref HandScore
  */
 void jaco_player::ShowHand() const{
-	std::cout << "Player " << player_index << "'s hands: " << std::endl;
+	std::cout << "  Player " << player_index << "'s hands: " << std::endl;
 	for(const auto& hand : PlayerHand){
-		std::cout << " Hand " << hand.hand_index << ":" << std::endl;
+		std::cout << "  Hand " << hand.hand_index << ":" << std::endl;
 		for(const auto &c : hand.cards){
 			std::cout << "   " << Cards::PrintFig(c.fig) << " of " << Cards::PrintSuit(c.suit) << std::endl;
 		}
-		std::cout << "  Score: " << HandScore(hand.hand_index) << std::endl;
+		std::cout << "   Score: " << HandScore(hand.hand_index) << std::endl;
 	}
 }
 
