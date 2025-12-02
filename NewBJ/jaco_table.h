@@ -140,6 +140,11 @@ public:
      */
     RoundEndInfo FinishRound() override;
 
+    /**
+     * @brief Prints the dealer's hand to standard output.
+     */
+    void ShowDealerHand() const;
+
 private:
 
     /**

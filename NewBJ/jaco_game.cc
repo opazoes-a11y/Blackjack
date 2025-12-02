@@ -87,8 +87,9 @@ void jaco_game::PlayGame() {
             " | Dealer money: " << table_.DealerMoney()
             << "\n";
   /**
-   * @todo Show dealer hand cards
+   * @todo Debbug dealer hand. Not showing output correctly.
    */
+  table_.ShowDealerHand();
   
   for (size_t i = 0; i < info.player_money_delta.size(); ++i) {
     // Print player money changes
