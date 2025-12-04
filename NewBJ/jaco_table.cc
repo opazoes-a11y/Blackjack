@@ -468,6 +468,8 @@ ITable::RoundEndInfo jaco_table::FinishRound() {
     bets.assign(1, 0);
   }
 
+  ShowDealerHand();
+
   dealer_money_ += result.croupier_money_delta;
   dealer_hand_.clear();
 
@@ -482,19 +484,19 @@ void jaco_table::ShowDealerHand() const {
   for (const auto& card : dealer_hand_) {
     // Print card value
     switch(card.value_) {
-      case ITable::Value::ACE:    std::cout << "  Ace";   break;
-      case ITable::Value::TWO:    std::cout << "  Two";   break;
-      case ITable::Value::THREE:  std::cout << "  Three"; break;
-      case ITable::Value::FOUR:   std::cout << "  Four";  break;
-      case ITable::Value::FIVE:   std::cout << "  Five";  break;
-      case ITable::Value::SIX:    std::cout << "  Six";   break;
-      case ITable::Value::SEVEN:  std::cout << "  Seven"; break;
-      case ITable::Value::EIGHT:  std::cout << "  Eight"; break;
-      case ITable::Value::NINE:   std::cout << "  Nine";  break;
-      case ITable::Value::TEN:    std::cout << "  Ten";   break;
-      case ITable::Value::JACK:   std::cout << "  Jack";  break;
-      case ITable::Value::QUEEN:  std::cout << "  Queen"; break;
-      case ITable::Value::KING:   std::cout << "  King";  break;
+      case ITable::Value::ACE:    std::cout << "\n  Ace";   break;
+      case ITable::Value::TWO:    std::cout << "\n  Two";   break;
+      case ITable::Value::THREE:  std::cout << "\n  Three"; break;
+      case ITable::Value::FOUR:   std::cout << "\n  Four";  break;
+      case ITable::Value::FIVE:   std::cout << "\n  Five";  break;
+      case ITable::Value::SIX:    std::cout << "\n  Six";   break;
+      case ITable::Value::SEVEN:  std::cout << "\n  Seven"; break;
+      case ITable::Value::EIGHT:  std::cout << "\n  Eight"; break;
+      case ITable::Value::NINE:   std::cout << "\n  Nine";  break;
+      case ITable::Value::TEN:    std::cout << "\n  Ten";   break;
+      case ITable::Value::JACK:   std::cout << "\n  Jack";  break;
+      case ITable::Value::QUEEN:  std::cout << "\n  Queen"; break;
+      case ITable::Value::KING:   std::cout << "\n  King";  break;
       default:  std::cout << "  Unknown";   break;
     }
     std::cout << " of ";

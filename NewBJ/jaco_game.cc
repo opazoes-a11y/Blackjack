@@ -81,15 +81,11 @@ void jaco_game::PlayGame() {
     }
   }
 
+  std::cout << "\n------------ Round finished ------------\n";
   const auto info = table_.FinishRound();
-  std::cout << "\n------------ Round finished ------------\n" <<
-            "\n Dealer delta : " << info.croupier_money_delta <<
+  std::cout << "\n Dealer delta : " << info.croupier_money_delta <<
             " | Dealer money: " << table_.DealerMoney()
             << "\n";
-  /**
-   * @todo Debbug dealer hand. Not showing output correctly.
-   */
-  table_.ShowDealerHand();
   
   for (size_t i = 0; i < info.player_money_delta.size(); ++i) {
     // Print player money changes
