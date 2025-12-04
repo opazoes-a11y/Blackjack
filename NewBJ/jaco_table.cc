@@ -497,7 +497,7 @@ void jaco_table::ShowDealerHand() const {
       case ITable::Value::JACK:   std::cout << "\n  Jack";  break;
       case ITable::Value::QUEEN:  std::cout << "\n  Queen"; break;
       case ITable::Value::KING:   std::cout << "\n  King";  break;
-      default:  std::cout << "  Unknown";   break;
+      default:  std::cout << "\n  Unknown";   break;
     }
     std::cout << " of ";
     // Print card suit
